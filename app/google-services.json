@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "553638611456",
+    "project_id": "gamerland-b74eb",
+    "storage_bucket": "gamerland-b74eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553638611456:android:f8b698ea10899fa518a6e5",
+        "android_client_info": {
+          "package_name": "com.example.gamerland"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs3xgyS3cudp4bkj61pu6S2rRg8UYH2_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
