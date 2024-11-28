@@ -7,11 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class activity_register extends AppCompatActivity implements View.OnClickListener {
     ImageButton imbtnBack;
@@ -45,7 +41,7 @@ public class activity_register extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        Intent imbtnBackClicked = new Intent(activity_register.this, MainActivity.class);
+        Intent imbtnBackClicked = new Intent(activity_register.this, activity_welcome.class);
         startActivity(imbtnBackClicked);
     }
 }

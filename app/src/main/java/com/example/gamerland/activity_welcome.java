@@ -1,0 +1,45 @@
+package com.example.gamerland;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class activity_welcome extends AppCompatActivity implements View.OnClickListener {
+
+    EditText edUsername;
+    EditText edPassword;
+    Button btnLogin;
+    Button btnRegister;
+    Button btnAdminLogin;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_welcome);
+
+        edUsername = findViewById(R.id.edUsername);
+        edPassword = findViewById(R.id.edPassword);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnRegister = findViewById(R.id.btnRegister);
+        btnAdminLogin = findViewById(R.id.btnAdminLogin);
+
+        // Set click listeners for buttons using the implemented interface
+        btnRegister.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == btnRegister) {
+            Intent intent1 = new Intent(activity_welcome.this, activity_register.class); // Assuming RegisterActivity exists
+            startActivity(intent1);
+        } else if (v == btnLogin) {
+            Intent intent2 = new Intent(activity_welcome.this, activity_home.class); // Assuming LoginActivity exists
+            startActivity(intent2);
+        }
+    }
+}
