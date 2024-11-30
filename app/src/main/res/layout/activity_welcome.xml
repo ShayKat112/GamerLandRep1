@@ -6,21 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity_welcome"
-    android:background="@drawable/androidstudiofinalbackground"
+    android:background="@drawable/hd_wallpaper_pixel_2_android_background_blue_curved_design_google_material_white"
     >
 
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="50dp"
         android:fontFamily="@font/adlam_display"
         android:gravity="center"
         android:text="Welcome to GamerLand"
         android:textColor="#000000"
-        android:textSize="25sp"
+        android:textSize="31sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="136dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="124dp"
         android:gravity="center"
         android:text="Users Login:"
         android:textColor="#000000"
@@ -41,11 +40,11 @@
         android:id="@+id/edUsername"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="184dp"
         android:hint="Username:"
         android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,22 +52,22 @@
         android:id="@+id/edPassword"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="31dp"
         android:ems="10"
         android:hint="Password:"
         android:inputType="textPassword"
         android:textColorHint="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edUsername" />
+        app:layout_constraintTop_toBottomOf="@+id/edUsername"
+        />
 
     <Button
         android:id="@+id/btnLogin"
-        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="172dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="36dp"
         android:backgroundTint="#2196F3"
         android:text="Login"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,9 +78,9 @@
         android:layout_width="259dp"
         android:layout_height="79dp"
         android:layout_marginStart="76dp"
-        android:layout_marginTop="40dp"
-        android:text="Still doesn't have an account? Click here to register:"
+        android:layout_marginTop="32dp"
         android:textColor="@color/black"
+        android:text="Still doesn't have an account? Click here to register:"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
@@ -90,11 +89,21 @@
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#2196F3"
         android:text="Register"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvAccountChecker" />
 
+    <Button
+        android:id="@+id/btnAdminLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="636dp"
+        android:backgroundTint="#2196F3"
+        android:text="Admin Login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
