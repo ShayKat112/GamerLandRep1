@@ -101,7 +101,7 @@
             android:layout_marginTop="148dp"
             android:ems="10"
             android:fontFamily="casual"
-            android:hint="Birth date:"
+            android:hint="Birth Date:"
             android:inputType="time|datetime"
             android:shadowColor="#FFFFFF"
             android:shadowRadius="5"
