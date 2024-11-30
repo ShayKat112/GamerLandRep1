@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/hd_wallpaper_pixel_2_android_background_blue_curved_design_google_material_white"
+    android:background="@drawable/androidstudiofinalbackground"
     tools:context=".activity_register">
 
         <ImageButton
@@ -50,8 +50,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
             android:layout_marginTop="164dp"
+            android:fontFamily="casual"
             android:hint="Username:"
-            android:textColorHint="#FFFFFF"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="5"
+            android:textColorHint="#000000"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,9 +66,13 @@
             android:layout_marginStart="52dp"
             android:layout_marginTop="20dp"
             android:ems="10"
+            android:fontFamily="casual"
             android:hint="Password:"
             android:inputType="textPassword"
-            android:textColorHint="#FFFFFF"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="5"
+            android:textColorHint="#000000"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edUsername" />
 
@@ -75,9 +83,13 @@
             android:layout_marginStart="52dp"
             android:layout_marginTop="84dp"
             android:ems="10"
+            android:fontFamily="casual"
             android:hint="Password verification:"
             android:inputType="textPassword"
-            android:textColorHint="#FFFFFF"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="5"
+            android:textColorHint="#000000"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edUsername" />
 
@@ -88,9 +100,13 @@
             android:layout_marginStart="52dp"
             android:layout_marginTop="148dp"
             android:ems="10"
+            android:fontFamily="casual"
             android:hint="Birth date:"
-            android:inputType="textPassword"
-            android:textColorHint="#FFFFFF"
+            android:inputType="time|datetime"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="5"
+            android:textColorHint="#000000"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edUsername" />
 
@@ -101,9 +117,13 @@
             android:layout_marginStart="52dp"
             android:layout_marginTop="16dp"
             android:ems="10"
+            android:fontFamily="casual"
             android:hint="Email:"
             android:inputType="textEmailAddress"
-            android:textColorHint="#FFFFFF"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="5"
+            android:textColorHint="#000000"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edBirthDate" />
 
@@ -114,9 +134,13 @@
             android:layout_marginStart="52dp"
             android:layout_marginTop="20dp"
             android:ems="10"
+            android:fontFamily="casual"
             android:hint="Liked games:"
-            android:inputType="textPassword"
-            android:textColorHint="#FFFFFF"
+            android:inputType="text"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="5"
+            android:textColorHint="#000000"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edEmail" />
 
