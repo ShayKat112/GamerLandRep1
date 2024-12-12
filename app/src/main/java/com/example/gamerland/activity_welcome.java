@@ -14,7 +14,6 @@ public class activity_welcome extends AppCompatActivity implements View.OnClickL
     EditText edPassword;
     Button btnLogin;
     Button btnRegister;
-    Button btnAdminLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +24,6 @@ public class activity_welcome extends AppCompatActivity implements View.OnClickL
         edPassword = findViewById(R.id.edPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
-        btnAdminLogin = findViewById(R.id.btnAdminLogin);
-
-        // Set click listeners for buttons using the implemented interface
         btnRegister.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
     }

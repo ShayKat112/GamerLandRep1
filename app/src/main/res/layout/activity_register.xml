@@ -12,7 +12,6 @@
             android:id="@+id/imbtnBack"
             android:layout_width="70dp"
             android:layout_height="72dp"
-            android:layout_marginStart="4dp"
             android:background="@null"
             android:src="@drawable/backarrow"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +25,7 @@
             android:layout_marginTop="72dp"
             android:gravity="center"
             android:text="User regis"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -74,14 +73,14 @@
             android:textColorHint="#000000"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edUsername" />
+            app:layout_constraintTop_toBottomOf="@id/edUsername" />
 
         <EditText
             android:id="@+id/edPasswordVerification"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
-            android:layout_marginTop="84dp"
+            android:layout_marginTop="24dp"
             android:ems="10"
             android:fontFamily="casual"
             android:hint="Password verification:"
@@ -91,31 +90,62 @@
             android:textColorHint="#000000"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edUsername" />
+            app:layout_constraintTop_toBottomOf="@id/edPassword" />
 
-        <EditText
-            android:id="@+id/edBirthDate"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="148dp"
+
+        <TextView
+            android:id="@+id/tvBirthDateText"
+            android:layout_width="105dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="448dp"
             android:ems="10"
             android:fontFamily="casual"
-            android:hint="Birth date:"
-            android:inputType="time|datetime"
             android:shadowColor="#FFFFFF"
             android:shadowRadius="5"
+            android:text="Birth Date:"
             android:textColorHint="#000000"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edUsername" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvBirthDate"
+            android:layout_width="105dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="448dp"
+            android:ems="10"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:shadowColor="#FFFFFF"
+            android:shadowRadius="5"
+            android:text="1/1/2024"
+            android:textColorHint="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnChooseDate"
+            android:layout_width="97dp"
+            android:layout_height="57dp"
+            android:layout_marginStart="272dp"
+            android:layout_marginTop="436dp"
+            android:backgroundTint="#2196F3"
+            android:onClick="openDatePicker"
+            android:text="Choose Date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/edEmail"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="372dp"
             android:ems="10"
             android:fontFamily="casual"
             android:hint="Email:"
@@ -125,14 +155,14 @@
             android:textColorHint="#000000"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edBirthDate" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/edLikedGames"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="504dp"
             android:ems="10"
             android:fontFamily="casual"
             android:hint="Liked games:"
@@ -142,18 +172,18 @@
             android:textColorHint="#000000"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edEmail" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="150dp"
-            android:layout_marginTop="30dp"
-            android:text="Register"
+            android:layout_marginStart="152dp"
+            android:layout_marginTop="568dp"
             android:backgroundTint="#2196F3"
+            android:text="Register"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edLikedGames" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

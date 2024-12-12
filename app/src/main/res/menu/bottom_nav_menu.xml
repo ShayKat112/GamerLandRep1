@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ItHome"
+        android:title="Home"
+        android:icon="@mipmap/ic_home" />
+
+    <item
+        android:id="@+id/ItChat"
+        android:title="Chat"
+        android:icon="@mipmap/ic_blogs" />
+
+    <item
+        android:id="@+id/ItContact"
+        android:title="Contact"
+        android:icon="@mipmap/ic_contact" />
+
+</menu>

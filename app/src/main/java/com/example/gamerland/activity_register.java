@@ -1,11 +1,15 @@
 package com.example.gamerland;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,11 +20,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Calendar;
+
 public class activity_register extends AppCompatActivity implements View.OnClickListener {
-    ImageButton imbtnBack;
-    EditText UserName,PasswordInput,passwordVer,birthdate,email,likedGame;
-    Button register;
-    String emailAdress, password;
+    private TextView tvBirthDate;
+    private ImageButton imbtnBack;
+    private EditText edUsername,edPassword,edPasswordVerification,edEmail,edLikedGames;
+    private Button btnRegister, btnChooseDate;
+    private String emailAdress, password;
+    private DatePickerDialog datePickerDialog;
+
 
     private FirebaseAuth mAuth;
 
@@ -28,23 +37,56 @@ public class activity_register extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-
+        tvBirthDate = findViewById(R.id.tvBirthDate);
+        tvBirthDate.setText(getTodayDate());
+        initDatePicker();
         imbtnBack = findViewById(R.id.imbtnBack);
         imbtnBack.setOnClickListener(this);
-        register = findViewById(R.id.btnRegister);
-        UserName = findViewById(R.id.edUsername);
-        PasswordInput = findViewById(R.id.edPassword);
-        passwordVer = findViewById(R.id.edPasswordVerification);
-        birthdate = findViewById(R.id.edBirthDate);
-        email = findViewById(R.id.edEmail);
-        likedGame = findViewById(R.id.edLikedGames);
+        btnRegister = findViewById(R.id.btnRegister);
+        edUsername = findViewById(R.id.edUsername);
+        edPassword = findViewById(R.id.edPassword);
+        edPasswordVerification = findViewById(R.id.edPasswordVerification);
+        edEmail = findViewById(R.id.edEmail);
+        edLikedGames = findViewById(R.id.edLikedGames);
+        btnChooseDate = findViewById(R.id.btnChooseDate);
 
         mAuth = FirebaseAuth.getInstance();
 
-        register.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
 
 
+    }
+
+    private String getTodayDate() {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        return  makeDateString(day, month + 1, year);
+    }
+
+    private void initDatePicker(){
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+            String date = makeDateString(day, month, year);
+            tvBirthDate.setText(date);
+            }
+        };
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        int style = AlertDialog.THEME_HOLO_LIGHT;
+
+        datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
+    }
+
+    private String makeDateString(int day, int month, int year) {
+        return day + "/" + month + "/" + year;
     }
 
 
@@ -56,9 +98,9 @@ public class activity_register extends AppCompatActivity implements View.OnClick
         }
 
 
-        if (view == register) {
-            emailAdress = email.getText().toString().trim();
-            password = PasswordInput.getText().toString().trim();
+        if (view == btnRegister) {
+            emailAdress = edEmail.getText().toString().trim();
+            password = edPassword.getText().toString().trim();
             mAuth.createUserWithEmailAndPassword(emailAdress, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -71,6 +113,11 @@ public class activity_register extends AppCompatActivity implements View.OnClick
                             }
                         }
                     });
+            Intent btnRegisterClicked = new Intent(activity_register.this, activity_home.class);
+            startActivity(btnRegisterClicked);
         }
+    }
+    public void openDatePicker(View view) {
+        datePickerDialog.show();
     }
 }
