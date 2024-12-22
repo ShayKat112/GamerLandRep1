@@ -2,6 +2,7 @@ package com.example.gamerland;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,10 +31,15 @@ public class activity_register extends AppCompatActivity implements View.OnClick
     private TextView tvBirthDate;
     private ImageView imvAvatar;
     private ImageButton imbtnBack;
-    private EditText edUsername,edPassword,edPasswordVerification,edEmail,edLikedGames;
+    private EditText edUsername, edPassword, edPasswordVerification, edEmail, edLikedGames;
     private Button btnRegister, btnChooseDate, btnChooseAvatar;
     private String emailAdress, password;
     private DatePickerDialog datePickerDialog;
+
+    private int[] avatars = {
+            R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3,
+            R.drawable.avatar4, R.drawable.avatar5
+    };
 
 
     private FirebaseAuth mAuth;
@@ -60,11 +67,6 @@ public class activity_register extends AppCompatActivity implements View.OnClick
 
         btnRegister.setOnClickListener(this);
 
-        int[] avatars = {
-                R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3,
-                R.drawable.avatar4, R.drawable.avatar5
-        };
-
     }
 
     private String getTodayDate() {
@@ -72,16 +74,16 @@ public class activity_register extends AppCompatActivity implements View.OnClick
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
-        return  makeDateString(day, month + 1, year);
+        return makeDateString(day, month + 1, year);
     }
 
-    private void initDatePicker(){
+    private void initDatePicker() {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-            String date = makeDateString(day, month, year);
-            tvBirthDate.setText(date);
+                String date = makeDateString(day, month, year);
+                tvBirthDate.setText(date);
             }
         };
 
@@ -100,16 +102,9 @@ public class activity_register extends AppCompatActivity implements View.OnClick
     }
 
 
+
     @Override
     public void onClick(View view) {
-
-        showAvatarSelectionDialog(avatars);
-
-        if(view == imbtnBack){
-        Intent imbtnBackClicked = new Intent(activity_register.this, activity_welcome.class);
-        startActivity(imbtnBackClicked);
-        }
-
 
         if (view == btnRegister) {
             emailAdress = edEmail.getText().toString().trim();
@@ -130,36 +125,15 @@ public class activity_register extends AppCompatActivity implements View.OnClick
             startActivity(btnRegisterClicked);
         }
 
-        if (view == btnChooseAvatar){
-
+        if (view == btnChooseAvatar) {
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.dialog_avatar_selection);
+            dialog.show();
         }
     }
+
+
     public void openDatePicker(View view) {
         datePickerDialog.show();
-    }
-
-    private void showAvatarSelectionDialog(int[] avatars) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity_register.this);
-        builder.setTitle("Choose Your Avatar");
-
-        // RecyclerView setup
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog_avatar_selection, null);
-        RecyclerView recyclerView = dialogView.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity_register.this, RecyclerView.HORIZONTAL, false));
-
-        AvatarAdapter adapter = new AvatarAdapter(activity_register.this, avatars, new AvatarAdapter.OnAvatarClickListener() {
-            @Override
-            public void onAvatarClick(int avatarResId) {
-                imvAvatar.setImageResource(avatarResId);
-                Toast.makeText(activity_register.this, "Avatar selected!", Toast.LENGTH_SHORT).show();
-                alertDialog.dismiss();
-            }
-        });
-
-        recyclerView.setAdapter(adapter);
-
-        builder.setView(dialogView);
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 }
