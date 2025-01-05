@@ -35,11 +35,9 @@ public class activity_register extends AppCompatActivity implements View.OnClick
     private Button btnRegister, btnChooseDate, btnChooseAvatar;
     private String emailAdress, password;
     private DatePickerDialog datePickerDialog;
+    
 
-    private int[] avatars = {
-            R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3,
-            R.drawable.avatar4, R.drawable.avatar5
-    };
+    int[] avatars = AvatarUtils.getAvatars();
 
 
     private FirebaseAuth mAuth;

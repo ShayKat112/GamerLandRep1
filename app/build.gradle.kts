@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.firebase.auth)
     implementation("com.google.android.material:material:1.5.0")
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
