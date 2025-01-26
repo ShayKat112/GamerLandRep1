@@ -3,8 +3,16 @@ package com.example.gamerland;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,6 +33,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class activity_register extends AppCompatActivity implements View.OnClickListener {
@@ -35,9 +47,10 @@ public class activity_register extends AppCompatActivity implements View.OnClick
     private Button btnRegister, btnChooseDate, btnChooseAvatar;
     private String emailAdress, password;
     private DatePickerDialog datePickerDialog;
-    
+    private static final String IMAGE_DIRECTORY = "/demonuts";
+    private int GALLERY = 1, CAMERA = 2;
+    final int REQUEST_CODE_GALLERY = 999;
 
-    int[] avatars = AvatarUtils.getAvatars();
 
 
     private FirebaseAuth mAuth;
@@ -124,10 +137,96 @@ public class activity_register extends AppCompatActivity implements View.OnClick
         }
 
         if (view == btnChooseAvatar) {
-            Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.dialog_avatar_selection);
-            dialog.show();
+            showPictureDialog();
+            choosePhotoFromGallary();
+            takePhotoFromCamera();
         }
+    }
+
+    private void showPictureDialog(){
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
+        pictureDialog.setTitle("Please choose where the picture is going to be taken from:");
+        String[] pictureDialogsItems = {
+                "From Gallery", "From Camera"
+        };
+        pictureDialog.setItems(pictureDialogsItems, new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    choosePhotoFromGallary();
+                } else if (which == 1) {
+                    takePhotoFromCamera();
+                }
+            }
+        });
+        pictureDialog.show();
+    }
+
+    private void choosePhotoFromGallary() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, GALLERY);
+    }
+
+    private void takePhotoFromCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, CAMERA);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == this.RESULT_CANCELED){
+            return;
+        }
+        if(requestCode == GALLERY){
+                if(data != null){
+                    Uri contentURI = data.getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+                        String path = saveImage(bitmap);
+                        Toast.makeText(activity_register.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                        imvAvatar.setImageBitmap(bitmap);
+                    }
+                    catch (IOException e){
+                        e.printStackTrace();
+                        Toast.makeText(activity_register.this, "Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        }
+        if(requestCode == CAMERA){
+            Bitmap thumbnail = (Bitmap)data.getExtras().get("data");
+            imvAvatar.setImageBitmap(thumbnail);
+            Toast.makeText(activity_register.this,"Image Saved!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public String saveImage(Bitmap myBitmap){
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File wallpaperDirecotery = new File(Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        if(!wallpaperDirecotery.exists()){
+            wallpaperDirecotery.mkdirs();
+        }
+        try{
+            File f = new File(wallpaperDirecotery, Calendar.getInstance().getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(this, new String[]{f.getPath()}, new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+            return f.getAbsolutePath();
+        } catch (IOException e1){
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+    private byte[] imageViewToByte(ImageView image){
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 0, stream);
+        byte[] byteArray=stream.toByteArray();
+        return byteArray;
     }
 
 
