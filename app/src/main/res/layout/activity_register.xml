@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/androidstudiofinalbackground"
-    tools:context=".activity_register">
+    tools:context=".RegisterActivity">
 
         <ImageButton
             android:id="@+id/imbtnback"

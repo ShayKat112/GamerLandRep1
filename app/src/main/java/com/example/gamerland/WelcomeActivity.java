@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class activity_welcome extends AppCompatActivity implements View.OnClickListener {
+public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText edUsername;
     EditText edPassword;
@@ -31,10 +31,10 @@ public class activity_welcome extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (v == btnRegister) {
-            Intent intent1 = new Intent(activity_welcome.this, activity_register.class); // Assuming RegisterActivity exists
+            Intent intent1 = new Intent(WelcomeActivity.this, RegisterActivity.class); // Assuming RegisterActivity exists
             startActivity(intent1);
         } else if (v == btnLogin) {
-            Intent intent2 = new Intent(activity_welcome.this, activity_home.class); // Assuming LoginActivity exists
+            Intent intent2 = new Intent(WelcomeActivity.this, HomeActivity.class); // Assuming LoginActivity exists
             startActivity(intent2);
         }
     }

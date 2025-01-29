@@ -13,16 +13,16 @@
         android:theme="@style/Theme.GamerLand"
         tools:targetApi="31" >
         <activity
-            android:name=".activity_welcome"
+            android:name=".WelcomeActivity"
             android:exported="false" />
         <activity
-            android:name=".activity_home"
+            android:name=".HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".activity_register"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".activity_open_screen"
+            android:name=".OpenScreenActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

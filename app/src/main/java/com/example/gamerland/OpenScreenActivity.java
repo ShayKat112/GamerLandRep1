@@ -3,13 +3,9 @@ package com.example.gamerland;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-public class activity_open_screen extends AppCompatActivity {
+public class OpenScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +20,7 @@ public class activity_open_screen extends AppCompatActivity {
                     sleep(3500);
 
 //start new activity
-                    Intent i=new Intent(activity_open_screen.this,activity_welcome.class);
+                    Intent i=new Intent(OpenScreenActivity.this, WelcomeActivity.class);
                     startActivity(i);
 
 //destroying Splash activity

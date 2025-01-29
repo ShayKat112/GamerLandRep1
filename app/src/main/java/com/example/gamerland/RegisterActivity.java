@@ -2,7 +2,6 @@ package com.example.gamerland;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,11 +24,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -39,7 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
-public class activity_register extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvBirthDate;
     private ImageView imvAvatar;
     private ImageButton imbtnBack;
@@ -77,7 +75,11 @@ public class activity_register extends AppCompatActivity implements View.OnClick
         mAuth = FirebaseAuth.getInstance();
 
         btnRegister.setOnClickListener(this);
-
+        btnChooseAvatar.setOnClickListener(this);
+        btnChooseDate.setOnClickListener(this);
+        imbtnBack.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
+        imvAvatar.setOnClickListener(this);
     }
 
     private String getTodayDate() {
@@ -125,21 +127,19 @@ public class activity_register extends AppCompatActivity implements View.OnClick
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(activity_register.this, "Authentication success.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Authentication success.", Toast.LENGTH_SHORT).show();
 
                             } else {
-                                Toast.makeText(activity_register.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-            Intent btnRegisterClicked = new Intent(activity_register.this, activity_home.class);
+            Intent btnRegisterClicked = new Intent(RegisterActivity.this, HomeActivity.class);
             startActivity(btnRegisterClicked);
         }
 
         if (view == btnChooseAvatar) {
             showPictureDialog();
-            choosePhotoFromGallary();
-            takePhotoFromCamera();
         }
     }
 
@@ -149,15 +149,11 @@ public class activity_register extends AppCompatActivity implements View.OnClick
         String[] pictureDialogsItems = {
                 "From Gallery", "From Camera"
         };
-        pictureDialog.setItems(pictureDialogsItems, new DialogInterface.OnClickListener(){
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    choosePhotoFromGallary();
-                } else if (which == 1) {
-                    takePhotoFromCamera();
-                }
+        pictureDialog.setItems(pictureDialogsItems, (dialog, which) -> {
+            if (which == 0) {
+                choosePhotoFromGallary();
+            } else if (which == 1) {
+                takePhotoFromCamera();
             }
         });
         pictureDialog.show();
@@ -184,19 +180,19 @@ public class activity_register extends AppCompatActivity implements View.OnClick
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
                         String path = saveImage(bitmap);
-                        Toast.makeText(activity_register.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
                         imvAvatar.setImageBitmap(bitmap);
                     }
                     catch (IOException e){
                         e.printStackTrace();
-                        Toast.makeText(activity_register.this, "Failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                     }
                 }
         }
         if(requestCode == CAMERA){
             Bitmap thumbnail = (Bitmap)data.getExtras().get("data");
             imvAvatar.setImageBitmap(thumbnail);
-            Toast.makeText(activity_register.this,"Image Saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this,"Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
     public String saveImage(Bitmap myBitmap){
