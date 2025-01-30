@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
@@ -24,18 +25,23 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvBirthDate;
@@ -71,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btnChooseDate = findViewById(R.id.btnChooseDate);
         btnChooseAvatar = findViewById(R.id.btnChooseAvatar);
         imvAvatar = findViewById(R.id.imvAvatar);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -124,6 +131,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             password = edPassword.getText().toString().trim();
             mAuth.createUserWithEmailAndPassword(emailAdress, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(edUsername.getText().toString()).build();
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -224,6 +232,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         byte[] byteArray=stream.toByteArray();
         return byteArray;
     }
+
+
 
 
     public void openDatePicker(View view) {
