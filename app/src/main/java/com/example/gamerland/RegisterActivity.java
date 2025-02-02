@@ -29,9 +29,8 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,8 +38,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -58,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
         mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         btnRegister.setOnClickListener(this);
         btnChooseAvatar.setOnClickListener(this);
@@ -131,7 +134,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             password = edPassword.getText().toString().trim();
             mAuth.createUserWithEmailAndPassword(emailAdress, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(edUsername.getText().toString()).build();
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -144,6 +146,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     });
             Intent btnRegisterClicked = new Intent(RegisterActivity.this, HomeActivity.class);
             startActivity(btnRegisterClicked);
+            String likedGamesInput = edLikedGames.getText().toString();
+            List<String> likedGames = Arrays.asList(likedGamesInput.split(","));
+            createUser(edEmail.getText().toString(), edUsername.getText().toString(), likedGames);
+
         }
 
         if (view == btnChooseAvatar) {
@@ -232,6 +238,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         byte[] byteArray=stream.toByteArray();
         return byteArray;
     }
+
+    public void createUser(String email, String username, List<String> likedGames) {
+        User user = new User(email, username, likedGames);
+
+        firestore.collection("users")
+                .document(email)
+                .set(user)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "User successfully written!"))
+                .addOnFailureListener(e -> Log.w("Firestore", "Error writing document", e));
+    }
+
 
 
 

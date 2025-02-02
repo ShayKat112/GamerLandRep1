@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edUsername"
+        android:id="@+id/edEmail"
         android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_marginTop="220dp"
@@ -61,7 +61,7 @@
         android:inputType="textPassword"
         android:textColorHint="#000000"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edUsername" />
+        app:layout_constraintTop_toBottomOf="@+id/edEmail" />
 
     <Button
         android:id="@+id/btnLogin"
