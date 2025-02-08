@@ -17,7 +17,7 @@ public class OpenScreenActivity extends AppCompatActivity {
 
                 try {
 //sleep thread for 10 seconds, time in milliseconds
-                    sleep(3500);
+                    sleep(69);
 
 //start new activity
                     Intent i=new Intent(OpenScreenActivity.this, WelcomeActivity.class);

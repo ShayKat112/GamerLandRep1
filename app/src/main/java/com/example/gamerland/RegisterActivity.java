@@ -1,62 +1,50 @@
 package com.example.gamerland;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvBirthDate;
     private ImageView imvAvatar;
-    private ImageButton imbtnBack;
     private EditText edUsername, edPassword, edPasswordVerification, edEmail, edLikedGames;
     private Button btnRegister, btnChooseDate, btnChooseAvatar;
-    private String emailAdress, password;
     private DatePickerDialog datePickerDialog;
-    private static final String IMAGE_DIRECTORY = "/demonuts";
-    private int GALLERY = 1, CAMERA = 2;
-    final int REQUEST_CODE_GALLERY = 999;
-
-
+    private static final int GALLERY = 1, CAMERA = 2;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
@@ -65,195 +53,179 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        // Initialize UI Elements
         tvBirthDate = findViewById(R.id.tvBirthDate);
-        tvBirthDate.setText(getTodayDate());
-        initDatePicker();
-        imbtnBack = findViewById(R.id.imbtnback);
-        imbtnBack.setOnClickListener(this);
-        btnRegister = findViewById(R.id.btnRegister);
         edUsername = findViewById(R.id.edUsername);
         edPassword = findViewById(R.id.edPassword);
         edPasswordVerification = findViewById(R.id.edPasswordVerification);
         edEmail = findViewById(R.id.edEmail);
         edLikedGames = findViewById(R.id.edLikedGames);
+        imvAvatar = findViewById(R.id.imvAvatar);
+        btnRegister = findViewById(R.id.btnRegister);
         btnChooseDate = findViewById(R.id.btnChooseDate);
         btnChooseAvatar = findViewById(R.id.btnChooseAvatar);
-        imvAvatar = findViewById(R.id.imvAvatar);
 
-
+        // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
+        // Initialize Date Picker
+        initDatePicker();
+        tvBirthDate.setText(getTodayDate());
+
+        // Set Listeners
         btnRegister.setOnClickListener(this);
         btnChooseAvatar.setOnClickListener(this);
         btnChooseDate.setOnClickListener(this);
-        imbtnBack.setOnClickListener(this);
-        btnRegister.setOnClickListener(this);
-        imvAvatar.setOnClickListener(this);
+    }
+
+    private void initDatePicker() {
+        DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
+            month++; // Months are 0-based in DatePicker
+            tvBirthDate.setText(makeDateString(day, month, year));
+        };
+
+        Calendar cal = Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT, dateSetListener,
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
     }
 
     private String getTodayDate() {
         Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        return makeDateString(day, month + 1, year);
-    }
-
-    private void initDatePicker() {
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String date = makeDateString(day, month, year);
-                tvBirthDate.setText(date);
-            }
-        };
-
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
-        int style = AlertDialog.THEME_HOLO_LIGHT;
-
-        datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
+        return makeDateString(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.YEAR));
     }
 
     private String makeDateString(int day, int month, int year) {
         return day + "/" + month + "/" + year;
     }
 
-
-
     @Override
     public void onClick(View view) {
-
         if (view == btnRegister) {
-            emailAdress = edEmail.getText().toString().trim();
-            password = edPassword.getText().toString().trim();
-            mAuth.createUserWithEmailAndPassword(emailAdress, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "Authentication success.", Toast.LENGTH_SHORT).show();
-
-                            } else {
-                                Toast.makeText(RegisterActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-            Intent btnRegisterClicked = new Intent(RegisterActivity.this, HomeActivity.class);
-            startActivity(btnRegisterClicked);
-            String likedGamesInput = edLikedGames.getText().toString();
-            List<String> likedGames = Arrays.asList(likedGamesInput.split(","));
-            createUser(edEmail.getText().toString(), edUsername.getText().toString(), likedGames);
-
-        }
-
-        if (view == btnChooseAvatar) {
+            registerUser();
+        } else if (view == btnChooseAvatar) {
             showPictureDialog();
+        } else if (view == btnChooseDate) { // Add this case
+            datePickerDialog.show();
         }
     }
 
-    private void showPictureDialog(){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == GALLERY) {
+                Uri selectedImageUri = data.getData();
+                if (selectedImageUri != null) {
+                    imvAvatar.setImageURI(selectedImageUri);
+                }
+            } else if (requestCode == CAMERA) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                if (photo != null) {
+                    imvAvatar.setImageBitmap(photo);
+                }
+            }
+        }
+    }
+
+
+
+    private void registerUser() {
+        String email = edEmail.getText().toString().trim();
+        String password = edPassword.getText().toString().trim();
+        String username = edUsername.getText().toString().trim();
+        String birthDate = tvBirthDate.getText().toString();
+        String likedGamesStr = edLikedGames.getText().toString();
+        List<String> likedGames = likedGamesStr.isEmpty() ? null : Arrays.asList(likedGamesStr.split(","));
+
+        if (email.isEmpty() || password.isEmpty() || username.isEmpty() || birthDate.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("RegisterActivity", "User created successfully");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .build();
+
+                            user.updateProfile(profileUpdates).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    String profileImage = encodeImageToBase64();
+                                    saveUserToFirestore(user.getEmail(), username, birthDate, likedGames, profileImage);
+                                } else {
+                                    Toast.makeText(RegisterActivity.this, "Failed to update profile", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Sign-up failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Log.e("RegisterActivity", "Sign-up failed: " + task.getException().getMessage());
+                    }
+                });
+
+    }
+
+
+    private void saveUserToFirestore(String email, String username, String birthDate, List<String> likedGames, String profileImage) {
+        // Create a UserModel object
+        usermodel user = new usermodel(email, username, birthDate, likedGames, profileImage);
+
+        // Save user to Firestore
+        firestore.collection("users").document(email)
+                .set(user)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(RegisterActivity.this, "User saved to Firestore", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                    finish();
+                }) // Missing closing parenthesis and curly brace here
+                .addOnFailureListener(e -> {
+                    Toast.makeText(RegisterActivity.this, "Error saving user: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+
+
+
+    private String encodeImageToBase64() {
+        Bitmap bitmap = ((BitmapDrawable) imvAvatar.getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+    }
+
+    private void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(this);
-        pictureDialog.setTitle("Please choose where the picture is going to be taken from:");
-        String[] pictureDialogsItems = {
-                "From Gallery", "From Camera"
-        };
-        pictureDialog.setItems(pictureDialogsItems, (dialog, which) -> {
+        pictureDialog.setTitle("Select Image Source");
+        String[] options = {"Gallery", "Camera"};
+        pictureDialog.setItems(options, (dialog, which) -> {
             if (which == 0) {
-                choosePhotoFromGallary();
-            } else if (which == 1) {
+                choosePhotoFromGallery();
+            } else {
                 takePhotoFromCamera();
             }
         });
         pictureDialog.show();
     }
 
-    private void choosePhotoFromGallary() {
+    private void choosePhotoFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, GALLERY);
     }
 
     private void takePhotoFromCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA);
+        } else {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(intent, CAMERA);
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == this.RESULT_CANCELED){
-            return;
-        }
-        if(requestCode == GALLERY){
-                if(data != null){
-                    Uri contentURI = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-                        String path = saveImage(bitmap);
-                        Toast.makeText(RegisterActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                        imvAvatar.setImageBitmap(bitmap);
-                    }
-                    catch (IOException e){
-                        e.printStackTrace();
-                        Toast.makeText(RegisterActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        }
-        if(requestCode == CAMERA){
-            Bitmap thumbnail = (Bitmap)data.getExtras().get("data");
-            imvAvatar.setImageBitmap(thumbnail);
-            Toast.makeText(RegisterActivity.this,"Image Saved!", Toast.LENGTH_SHORT).show();
         }
     }
-    public String saveImage(Bitmap myBitmap){
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirecotery = new File(Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        if(!wallpaperDirecotery.exists()){
-            wallpaperDirecotery.mkdirs();
-        }
-        try{
-            File f = new File(wallpaperDirecotery, Calendar.getInstance().getTimeInMillis() + ".jpg");
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this, new String[]{f.getPath()}, new String[]{"image/jpeg"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-            return f.getAbsolutePath();
-        } catch (IOException e1){
-            e1.printStackTrace();
-        }
-        return "";
-    }
 
-    private byte[] imageViewToByte(ImageView image){
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0, stream);
-        byte[] byteArray=stream.toByteArray();
-        return byteArray;
-    }
-
-    public void createUser(String email, String username, List<String> likedGames) {
-        User user = new User(email, username, likedGames);
-
-        firestore.collection("users")
-                .document(email)
-                .set(user)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "User successfully written!"))
-                .addOnFailureListener(e -> Log.w("Firestore", "Error writing document", e));
-    }
-
-
-
-
-
-    public void openDatePicker(View view) {
-        datePickerDialog.show();
-    }
 }
