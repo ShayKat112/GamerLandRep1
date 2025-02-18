@@ -2,7 +2,6 @@ package com.example.gamerland;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class OpenScreenActivity extends AppCompatActivity {
