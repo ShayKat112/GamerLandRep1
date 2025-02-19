@@ -7,13 +7,13 @@
         android:icon="@drawable/ic_home_foreground" />
 
     <item
-        android:id="@+id/ItChat"
-        android:title="Chat"
-        android:icon="@drawable/ic_blogs_foreground" />
+        android:id="@+id/ItSearch"
+        android:title="Search"
+        android:icon="@drawable/ic_search_foreground" />
 
     <item
-        android:id="@+id/ItContact"
-        android:title="Contact"
-        android:icon="@drawable/ic_contact_foreground" />
+        android:id="@+id/ItSettings"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings_foreground" />
 
 </menu>

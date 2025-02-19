@@ -15,8 +15,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         Fragment HomeFragment = new HomeFragment();
-        Fragment ChatFragment = new ChatFragment();
-        Fragment ContactFragment = new ContactFragment();
+        Fragment SearchFragment = new SearchFragment();
+        Fragment SettingsFragment = new SettingsFragment();
 
         setCurrentFragment(HomeFragment);
 
@@ -24,10 +24,10 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.ItHome) {
                 setCurrentFragment(HomeFragment);
-            } else if (item.getItemId() == R.id.ItChat) {
-                setCurrentFragment(ChatFragment);
-            } else if (item.getItemId() == R.id.ItContact) {
-                setCurrentFragment(ContactFragment);
+            } else if (item.getItemId() == R.id.ItSearch) {
+                setCurrentFragment(SearchFragment);
+            } else if (item.getItemId() == R.id.ItSettings) {
+                setCurrentFragment(SettingsFragment);
             }
             return true;
         });

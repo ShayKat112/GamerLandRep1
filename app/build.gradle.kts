@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.gamerland"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.gamerland"
@@ -39,6 +39,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("com.google.firebase:firebase-auth:23.2.0")
     implementation ("com.google.firebase:firebase-firestore:25.1.2")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core:1.15.0")
 
     implementation(libs.appcompat)
