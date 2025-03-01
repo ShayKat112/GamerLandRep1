@@ -8,17 +8,19 @@ public class usermodel {
     private String birthDate;
     private List<String> likedGames;
     private String profileImage;
+    private boolean isAdmin;
 
     public usermodel() {
         // Empty constructor needed for Firestore
     }
 
-    public usermodel(String email, String username, String birthDate, List<String> likedGames, String profileImage) {
+    public usermodel(String email, String username, String birthDate, List<String> likedGames, String profileImage, boolean isAdmin) {
         this.email = email;
         this.username = username;
         this.birthDate = birthDate;
         this.likedGames = likedGames;
-        this.profileImage = profileImage;
+        this.profileImage = profileImage
+        this.isAdmin = isAdmin;
     }
 
     public String getEmail() {
@@ -40,4 +42,6 @@ public class usermodel {
     public String getProfileImage() {
         return profileImage;
     }
+
+    public boolean isAdmin() {return isAdmin; }
 }

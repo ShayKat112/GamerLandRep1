@@ -26,6 +26,9 @@
         android:theme="@style/Theme.GamerLand"
         tools:targetApi="31">
         <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChatCreationActivity"
             android:exported="false" />
         <activity

@@ -38,6 +38,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/edPassword"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="56dp"
+        android:ems="10"
+        android:hint="Password:"
+        android:inputType="textPassword"
+        android:textColorHint="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/edEmail" />
+
+    <EditText
         android:id="@+id/edEmail"
         android:layout_width="300dp"
         android:layout_height="48dp"
@@ -50,37 +63,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edPassword"
-        android:layout_width="300dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Password:"
-        android:inputType="textPassword"
-        android:textColorHint="#000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edEmail" />
-
-    <Button
-        android:id="@+id/btnLogin"
-        style="@style/Widget.Material3.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="172dp"
-        android:layout_marginTop="28dp"
-        android:backgroundTint="#2196F3"
-        android:text="Login"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edPassword" />
-
     <TextView
         android:id="@+id/tvAccountChecker"
         android:layout_width="259dp"
         android:layout_height="79dp"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="36dp"
         android:text="Still doesn't have an account? Click here to register:"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -91,11 +79,23 @@
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="172dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#2196F3"
         android:text="Register"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvAccountChecker" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="184dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#2196F3"
+        android:text="Login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edPassword" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

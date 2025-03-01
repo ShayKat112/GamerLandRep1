@@ -48,22 +48,17 @@ public class ChatCreationActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
         }else{
             chatmodel chat = new chatmodel(chatName, chatDescription);
-            db.collection("chats").add(chat).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
-                    Toast.makeText(ChatCreationActivity.this, "Chat created", Toast.LENGTH_SHORT).show();
-                    edChatName.setText("");
-                    edChatDescription.setText("");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w("TAG", "Error adding document", e);
-                    Toast.makeText(ChatCreationActivity.this, "Error adding document", Toast.LENGTH_SHORT).show();
-                    edChatName.setText("");
-                    edChatDescription.setText("");
-                }
+            db.collection("chats").add(chat).addOnSuccessListener(documentReference -> {
+                Log.d("TAG", "DocumentSnapshot added with ID: " + documentReference.getId());
+                Toast.makeText(ChatCreationActivity.this, "Chat created", Toast.LENGTH_SHORT).show();
+                edChatName.setText("");
+                edChatDescription.setText("");
+                db.collection("chats").document(documentReference.getId()).update("chatId", documentReference.getId());
+            }).addOnFailureListener(e -> {
+                Log.w("TAG", "Error adding document", e);
+                Toast.makeText(ChatCreationActivity.this, "Error adding document", Toast.LENGTH_SHORT).show();
+                edChatName.setText("");
+                edChatDescription.setText("");
             });
         }
     }
