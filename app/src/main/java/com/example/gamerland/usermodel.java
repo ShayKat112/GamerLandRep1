@@ -19,7 +19,7 @@ public class usermodel {
         this.username = username;
         this.birthDate = birthDate;
         this.likedGames = likedGames;
-        this.profileImage = profileImage
+        this.profileImage = profileImage;
         this.isAdmin = isAdmin;
     }
 
