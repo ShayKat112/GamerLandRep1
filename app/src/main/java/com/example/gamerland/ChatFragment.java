@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,10 +47,8 @@ public class ChatFragment extends Fragment {
         // קבלת ה-Chat ID מהארגומנטים שהועברו ל-Fragment
         if (getArguments() != null) {
             chatId = getArguments().getString("chatId");
-        }
-
-        if (chatId == null) {
-            Log.e("ChatFragment", "Chat ID is missing");
+        } else {
+            Toast.makeText(getActivity(), "Error: No chatId found!", Toast.LENGTH_SHORT).show();
             return view;
         }
 

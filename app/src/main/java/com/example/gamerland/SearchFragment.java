@@ -3,13 +3,18 @@ package com.example.gamerland;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -73,6 +78,7 @@ public class SearchFragment extends Fragment {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                         String chatName = documentSnapshot.getString("chatName");
                         String chatId = documentSnapshot.getId();
+                        int flFragment = R.id.flFragment;
                         if (chatName != null) {
                             createChatButton(chatId,chatName);
                         }
@@ -94,10 +100,20 @@ public class SearchFragment extends Fragment {
         chatButton.setAllCaps(false);
 
         chatButton.setOnClickListener(v -> {
-            Intent intent = new Intent(requireActivity(), ChatFragment.class);
-            intent.putExtra("chatId", chatId);
-            startActivity(intent);
+            Toast.makeText(getActivity(), "Chat button clicked", Toast.LENGTH_SHORT).show();
+            AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            ChatFragment chatFragment = new ChatFragment();
+
+            Bundle args = new Bundle();
+            args.putString("chatId", chatId);
+            chatFragment.setArguments(args);
+
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.flFragment, chatFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
+
 
         // Add the button to your layout container.
         resultContainer.addView(chatButton);
