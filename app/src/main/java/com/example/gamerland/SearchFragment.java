@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -61,9 +61,9 @@ public class SearchFragment extends Fragment {
     private void searchChats(String queryText) {
         resultContainer.removeAllViews();
         CollectionReference chatsRef = db.collection("chats");
-        Query query = chatsRef.orderBy("name")
-                .startAt(queryText)
-                .endAt(queryText + "\uf8ff");
+        Query query = chatsRef.whereGreaterThanOrEqualTo("chatName", queryText)
+                .whereLessThanOrEqualTo("chatName", queryText + "\uf8ff");
+
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -71,9 +71,10 @@ public class SearchFragment extends Fragment {
                     Toast.makeText(getActivity(), "No chats found", Toast.LENGTH_SHORT).show();
                 } else {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        String chatName = documentSnapshot.getString("name");
+                        String chatName = documentSnapshot.getString("chatName");
+                        String chatId = documentSnapshot.getId();
                         if (chatName != null) {
-                            createChatButton(chatName);
+                            createChatButton(chatId,chatName);
                         }
                     }
                 }
@@ -86,11 +87,18 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void createChatButton(String chatName) {
+    private void createChatButton(String chatId,String chatName) {
         // Use requireActivity() to get a non-null Activity reference.
         Button chatButton = new Button(requireActivity());
         chatButton.setText(chatName);
         chatButton.setAllCaps(false);
+
+        chatButton.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), ChatFragment.class);
+            intent.putExtra("chatId", chatId);
+            startActivity(intent);
+        });
+
         // Add the button to your layout container.
         resultContainer.addView(chatButton);
     }
