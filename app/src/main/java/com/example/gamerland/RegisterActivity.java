@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ import java.util.List;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvBirthDate;
     private ImageView imvAvatar;
+    private ImageButton imbtnBack;
     private EditText edUsername, edPassword, edPasswordVerification, edEmail, edLikedGames;
     private Button btnRegister, btnChooseDate, btnChooseAvatar;
     private DatePickerDialog datePickerDialog;
@@ -48,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
+    private int age;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         edPasswordVerification = findViewById(R.id.edPasswordVerification);
         edEmail = findViewById(R.id.edEmail);
         edLikedGames = findViewById(R.id.edLikedGames);
+        imbtnBack = findViewById(R.id.imbtnback);
         imvAvatar = findViewById(R.id.imvAvatar);
         btnRegister = findViewById(R.id.btnRegister);
         btnChooseDate = findViewById(R.id.btnChooseDate);
@@ -78,12 +82,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btnRegister.setOnClickListener(this);
         btnChooseAvatar.setOnClickListener(this);
         btnChooseDate.setOnClickListener(this);
+        imbtnBack.setOnClickListener(this);
     }
 
     private void initDatePicker() {
         DatePickerDialog.OnDateSetListener dateSetListener = (datePicker, year, month, day) -> {
+            age = Calendar.getInstance().get(Calendar.YEAR) - year;
             month++; // Months are 0-based in DatePicker
             tvBirthDate.setText(makeDateString(day, month, year));
+
         };
 
         Calendar cal = Calendar.getInstance();
@@ -108,6 +115,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             showPictureDialog();
         } else if (view == btnChooseDate) { // Add this case
             datePickerDialog.show();
+        }
+        else if(view == imbtnBack){
+            Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
+            startActivity(intent);
         }
     }
 
