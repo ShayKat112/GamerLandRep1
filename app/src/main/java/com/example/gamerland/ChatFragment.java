@@ -33,12 +33,12 @@ public class ChatFragment extends Fragment {
     private List<messagemodel> messageList;
     private FirebaseFirestore db;
     private String chatId;
+    private String userId;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
-
         recyclerView = view.findViewById(R.id.recyclerView);
         messageInput = view.findViewById(R.id.messageInput);
         sendButton = view.findViewById(R.id.sendButton);
@@ -52,13 +52,12 @@ public class ChatFragment extends Fragment {
             return view;
         }
 
-        messageList = new ArrayList<>();
-        chatAdapter = new ChatAdapter(messageList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(chatAdapter);
+       messageList = new ArrayList<>();
+       chatAdapter = new ChatAdapter(messageList);
+      recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+      recyclerView.setAdapter(chatAdapter);
 
         loadMessages();
-
         sendButton.setOnClickListener(v -> sendMessage());
 
         return view;

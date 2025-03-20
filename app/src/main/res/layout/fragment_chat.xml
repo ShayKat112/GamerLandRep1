@@ -16,7 +16,7 @@
     <!-- שורת הכנסת ההודעה ושליחת הודעה -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:orientation="horizontal"
         android:padding="4dp">
 
@@ -34,6 +34,7 @@
             android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#03A9F4"
             android:text="שלח"
             android:padding="8dp"/>
     </LinearLayout>

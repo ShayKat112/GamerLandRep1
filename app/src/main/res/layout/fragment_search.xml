@@ -11,6 +11,7 @@
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#8BC1EC"
         android:queryHint="Search Chats" />
 
     <!-- ScrollView for scrolling if there are many results -->

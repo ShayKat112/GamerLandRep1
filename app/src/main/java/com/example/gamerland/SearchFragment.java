@@ -43,9 +43,14 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
+
         searchView = view.findViewById(R.id.searchView);
+
+        searchView.setIconifiedByDefault(false);
+
         resultContainer = view.findViewById(R.id.resultContainer);
         db = FirebaseFirestore.getInstance();
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -78,7 +83,6 @@ public class SearchFragment extends Fragment {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
                         String chatName = documentSnapshot.getString("chatName");
                         String chatId = documentSnapshot.getId();
-                        int flFragment = R.id.flFragment;
                         if (chatName != null) {
                             createChatButton(chatId,chatName);
                         }
@@ -94,20 +98,28 @@ public class SearchFragment extends Fragment {
     }
 
     private void createChatButton(String chatId,String chatName) {
-        // Use requireActivity() to get a non-null Activity reference.
+        for (int i = 0; i < resultContainer.getChildCount(); i++) {
+            View child = resultContainer.getChildAt(i);
+            if (child instanceof Button) {
+                Button existingButton = (Button) child;
+                if (existingButton.getText().toString().equals(chatName)) {
+                    return;
+                }
+            }
+        }
         Button chatButton = new Button(requireActivity());
         chatButton.setText(chatName);
         chatButton.setAllCaps(false);
-
+        chatButton.setPadding(16, 16, 16, 16);
+        chatButton.setTextSize(16);
+        chatButton.setBackgroundColor(0xFF8BC1EC);
         chatButton.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "Chat button clicked", Toast.LENGTH_SHORT).show();
+            resultContainer.removeAllViews();
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
             ChatFragment chatFragment = new ChatFragment();
-
-            Bundle args = new Bundle();
-            args.putString("chatId", chatId);
-            chatFragment.setArguments(args);
-
+            Bundle bundle = new Bundle();
+            bundle.putString("chatId", chatId);
+            chatFragment.setArguments(bundle);
             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.flFragment, chatFragment);
             transaction.addToBackStack(null);
