@@ -42,16 +42,13 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 Intent intent1 = new Intent(WelcomeActivity.this, RegisterActivity.class); // Assuming RegisterActivity exists
                 startActivity(intent1);
         } else if (v == btnLogin) {
-                Intent intent2 = new Intent(WelcomeActivity.this, HomeActivity.class); // Assuming LoginActivity exists
-                startActivity(intent2);
                 String email = edEmail.getText().toString();
                 String password = edPassword.getText().toString();
 
                 if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(WelcomeActivity.this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
                 return;
-            }
-                signIn(email, password);
+            } signIn(email, password);
         }
     }
 
@@ -59,7 +56,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
+
                         Toast.makeText(WelcomeActivity.this, "Login successful.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(WelcomeActivity.this, HomeActivity.class);
                         startActivity(intent);
