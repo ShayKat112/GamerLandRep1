@@ -34,6 +34,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         btnRegister = findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override

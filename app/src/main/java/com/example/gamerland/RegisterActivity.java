@@ -187,7 +187,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void saveUserToFirestore(String email, String username, String birthDate, List<String> likedGames, String profileImage) {
         // Create a UserModel object
         usermodel user = new usermodel(email, username, birthDate, likedGames, profileImage, false);
-
         // Save user to Firestore
         firestore.collection("users").document(email)
                 .set(user)
