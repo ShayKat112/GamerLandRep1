@@ -145,11 +145,43 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void registerUser() {
         String email = edEmail.getText().toString().trim();
+        int counterDigits = 0;
+        boolean isUpperCase = false;
+        boolean isLetter = false;
         String password = edPassword.getText().toString().trim();
         String username = edUsername.getText().toString().trim();
         String birthDate = tvBirthDate.getText().toString();
         String likedGamesStr = edLikedGames.getText().toString();
         List<String> likedGames = likedGamesStr.isEmpty() ? null : Arrays.asList(likedGamesStr.split(","));
+        for (int i = 0; i < password.length(); i++) {
+            if (Character.isDigit(password.charAt(i))) {
+                counterDigits++;
+            }
+            if (Character.isUpperCase(password.charAt(i))) {
+                isUpperCase = true;
+            }
+            if (Character.isLetter(password.charAt(i))) {
+                isLetter = true;
+            }
+        }
+        if (counterDigits < 2) {
+            Toast.makeText(this, "Password must contain at least 2 digits", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!isUpperCase) {
+            Toast.makeText(this, "Password must contain at least 1 uppercase letter", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!isLetter) {
+            Toast.makeText(this, "Password must contain at least 1 letter", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!password.equals(edPasswordVerification.getText().toString().trim())) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
 
         if (email.isEmpty() || password.isEmpty() || username.isEmpty() || birthDate.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
