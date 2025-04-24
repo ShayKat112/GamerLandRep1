@@ -1,8 +1,11 @@
 package com.example.gamerland;
 
+import android.widget.ImageView;
+
 public class messagemodel {
     private String text;
     private String senderId;
+    private ImageView tvImvAvatar;
     private long timestamp;
 
     public messagemodel() {} // נדרש על ידי Firestore
@@ -14,6 +17,5 @@ public class messagemodel {
     }
 
     public String getText() { return text; }
-    public String getSenderId() { return senderId; }
     public long getTimestamp() { return timestamp; }
 }
