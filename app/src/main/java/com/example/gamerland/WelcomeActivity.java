@@ -45,6 +45,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         } else if (v == btnLogin) {
                 String email = edEmail.getText().toString();
                 String password = edPassword.getText().toString();
+                Intent intent = new Intent(WelcomeActivity.this, HomeActivity.class);
+                startActivity(intent);
 
                 if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(WelcomeActivity.this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
