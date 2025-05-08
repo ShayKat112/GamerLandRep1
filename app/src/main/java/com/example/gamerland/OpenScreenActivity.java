@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class OpenScreenActivity extends AppCompatActivity {
 
     @Override
@@ -11,19 +14,26 @@ public class OpenScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_screen);
 
-        Thread t=new Thread() {
+        Thread t = new Thread() {
             public void run() {
-
                 try {
-//sleep thread for 10 seconds, time in milliseconds
-                    sleep(69);
+                    // Wait for splash (optional, short time recommended)
+                    sleep(1000); // 1 second (adjust as needed)
 
-//start new activity
-                    Intent i=new Intent(OpenScreenActivity.this, WelcomeActivity.class);
+                    // Check if user is logged in
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    Intent i;
+
+                    if (user != null) {
+                        // User is logged in, go to home page
+                        i = new Intent(OpenScreenActivity.this, HomeActivity.class);
+                    } else {
+                        // No user logged in, go to login/welcome page
+                        i = new Intent(OpenScreenActivity.this, WelcomeActivity.class);
+                    }
+
                     startActivity(i);
-
-//destroying Splash activity
-                    finish();
+                    finish(); // Close splash screen
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -31,7 +41,6 @@ public class OpenScreenActivity extends AppCompatActivity {
             }
         };
 
-//start thread
-        t.start();
+        t.start(); // Start the splash thread
     }
-    }
+}

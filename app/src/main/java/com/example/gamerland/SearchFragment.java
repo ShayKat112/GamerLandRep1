@@ -72,29 +72,21 @@ public class SearchFragment extends Fragment {
         resultContainer.removeAllViews();
         CollectionReference chatsRef = db.collection("chats");
         Query query = db.collection("chats")
-                .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING);
+                .whereEqualTo("chatName", queryText);
 
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (queryDocumentSnapshots.isEmpty()) {
-                    Toast.makeText(getActivity(), "No chats found", Toast.LENGTH_SHORT).show();
-                } else {
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        String chatName = documentSnapshot.getString("chatName");
-                        String chatId = documentSnapshot.getId();
-                        if (chatName != null) {
-                            createChatButton(chatId,chatName);
-                        }
+        query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (queryDocumentSnapshots.isEmpty()) {
+                Toast.makeText(getActivity(), "No chats found", Toast.LENGTH_SHORT).show();
+            } else {
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                    String chatName = documentSnapshot.getString("chatName");
+                    String chatId = documentSnapshot.getId();
+                    if (chatName != null) {
+                        createChatButton(chatId,chatName);
                     }
                 }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        }).addOnFailureListener(e -> Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void createChatButton(String chatId,String chatName) {
