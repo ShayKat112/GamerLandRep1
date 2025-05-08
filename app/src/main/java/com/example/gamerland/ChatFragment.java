@@ -89,10 +89,23 @@ public class ChatFragment extends Fragment {
         String text = messageInput.getText().toString().trim();
         if (text.isEmpty()) return;
 
-        messagemodel message = new messagemodel(text, "user_id", System.currentTimeMillis());
-        db.collection("chats").document(chatId).collection("messages")
+        long now = System.currentTimeMillis();
+        messagemodel message = new messagemodel(text, "user_id", now);
+        // 1. שולחים את ההודעה
+        db.collection("chats")
+                .document(chatId)
+                .collection("messages")
                 .add(message)
-                .addOnSuccessListener(documentReference -> messageInput.setText(""))
+                .addOnSuccessListener(documentReference -> {
+                    // מנקים את השדה
+                    messageInput.setText("");
+
+                    // 2. מעדכנים את זמן ההודעה האחרון בשדה בקובץ ה־chat עצמו
+                    db.collection("chats")
+                            .document(chatId)
+                            .update("lastMessageTimestamp", now);
+                })
                 .addOnFailureListener(e -> Log.e("ChatFragment", "Error sending message", e));
     }
+
 }

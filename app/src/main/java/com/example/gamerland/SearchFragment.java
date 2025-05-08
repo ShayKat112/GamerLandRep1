@@ -71,8 +71,8 @@ public class SearchFragment extends Fragment {
     private void searchChats(String queryText) {
         resultContainer.removeAllViews();
         CollectionReference chatsRef = db.collection("chats");
-        Query query = chatsRef.whereGreaterThanOrEqualTo("chatName", queryText)
-                .whereLessThanOrEqualTo("chatName", queryText + "\uf8ff");
+        Query query = db.collection("chats")
+                .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING);
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
