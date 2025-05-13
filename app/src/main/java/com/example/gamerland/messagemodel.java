@@ -4,18 +4,40 @@ import android.widget.ImageView;
 
 public class messagemodel {
     private String text;
-    private String senderId;
-    private ImageView tvImvAvatar;
+    private String senderUsername;
+    private String tvImvAvatar;
     private long timestamp;
 
     public messagemodel() {} // נדרש על ידי Firestore
 
-    public messagemodel(String text, String senderId, long timestamp) {
+    public messagemodel(String text, String senderUsername, String tvImvAvatar, long timestamp) {
         this.text = text;
-        this.senderId = senderId;
+        this.senderUsername = senderUsername;
+        this.tvImvAvatar = tvImvAvatar;
         this.timestamp = timestamp;
     }
 
-    public String getText() { return text; }
-    public long getTimestamp() { return timestamp; }
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+    }
+
+    public String getTvImvAvatar() {
+        return tvImvAvatar;
+    }
+
+    public void setTvImvAvatar(String tvImvAvatar) {
+        this.tvImvAvatar = tvImvAvatar;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
 }

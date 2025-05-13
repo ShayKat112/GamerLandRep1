@@ -43,5 +43,7 @@ public class usermodel {
         return profileImage;
     }
 
-    public boolean isAdmin() {return isAdmin; }
+    public boolean isAdmin() {
+        return isAdmin;
+    }
 }

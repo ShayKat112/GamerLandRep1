@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setCurrentFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.flFragment, fragment)
+                .replace(R.id.nav_host_fragment, fragment)
                 .commit();
     }
 }

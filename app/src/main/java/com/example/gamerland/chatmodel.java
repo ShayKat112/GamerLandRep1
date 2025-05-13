@@ -3,6 +3,15 @@ package com.example.gamerland;
 public class chatmodel {
     private String chatName;
     private String chatDescription;
+    private String chatId;
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
 
     public chatmodel() {
     }
@@ -27,5 +36,4 @@ public class chatmodel {
     public void setChatDescription(String chatDescription) {
         this.chatDescription = chatDescription;
     }
-
 }

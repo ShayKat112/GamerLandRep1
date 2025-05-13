@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -27,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,12 +38,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private TextView tvAge;
     private TextView tvEmail;
     private TextView tvLikedGames;
-    private Button btnChangeProfilePicture;
+    private Button btnChangeProfilePicture, btnSignOut;
     private FirebaseFirestore firestore;
     private static final int GALLERY = 1, CAMERA = 2;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = auth.getCurrentUser();
-
 
     public SettingsFragment() {
     }
@@ -65,35 +66,40 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         tvAge = view.findViewById(R.id.tvAge);
         tvEmail = view.findViewById(R.id.tvEmail);
         tvLikedGames = view.findViewById(R.id.tvLikedGames);
+        btnSignOut = view.findViewById(R.id.btnSignOut);
+        btnSignOut.setOnClickListener(v -> {
+            auth.signOut();
+            startActivity(new Intent(getActivity(), WelcomeActivity.class));
+            getActivity().finish();
+        });
         btnChangeProfilePicture = view.findViewById(R.id.btnChangeProfilePicture);
         btnChangeProfilePicture.setOnClickListener(this);
 
         firestore = FirebaseFirestore.getInstance();
         String email = currentUser.getEmail();
-                DocumentReference docRef = firestore.collection("users").document(email);
-            docRef.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    String username = documentSnapshot.getString("username");
-                    List<String> likedGames = (List<String>) documentSnapshot.get("likedGames");
+        DocumentReference docRef = firestore.collection("users").document(email);
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String username = documentSnapshot.getString("username");
+                List<String> likedGames = (List<String>) documentSnapshot.get("likedGames");
 
-                    String birthDate = documentSnapshot.getString("birthDate");
-                    String birthDateOnlyYear = birthDate.substring(birthDate.length() - 4);
-                    int birthDateInteger = Integer.parseInt(birthDateOnlyYear);
-                    String age = Calendar.getInstance().get(Calendar.YEAR) - birthDateInteger + "";
+                String birthDate = documentSnapshot.getString("birthDate");
+                String birthDateOnlyYear = birthDate.substring(birthDate.length() - 4);
+                int birthDateInteger = Integer.parseInt(birthDateOnlyYear);
+                String age = Calendar.getInstance().get(Calendar.YEAR) - birthDateInteger + "";
 
-                    tvUsername.setText("Username: " + username);
-                    tvAge.setText("Age: " + age);
-                    tvEmail.setText("Email: " + email);
-                    tvLikedGames.setText("Liked games: " + likedGames);
-                    saveImageToFirestore(documentSnapshot.getString("profileImage"));
-                    changeStringImageToImageView(documentSnapshot.getString("profileImage"));
-                    tvImvAvatar.setImageBitmap(changeStringImageToImageView(documentSnapshot.getString("profileImage")));
-                } else {
-                    Log.d("Firestore", "No such document");
-                }
-            }).addOnFailureListener(e -> Log.e("Firestore", "Error fetching document", e));
-    return view;
-}
+                tvUsername.setText("Username: " + username);
+                tvAge.setText("Age: " + age);
+                tvEmail.setText("Email: " + email);
+                tvLikedGames.setText("Liked games: " + likedGames);
+                saveImageToFirestore(documentSnapshot.getString("profileImage"));
+                tvImvAvatar.setImageBitmap(changeStringImageToImageView(documentSnapshot.getString("profileImage")));
+            } else {
+                Log.d("Firestore", "No such document");
+            }
+        }).addOnFailureListener(e -> Log.e("Firestore", "Error fetching document", e));
+        return view;
+    }
 
     @Override
     public void onClick(View view) {
@@ -106,7 +112,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(galleryIntent, GALLERY);
                 } else {
-                    if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA);
                     } else {
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -115,16 +121,49 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 }
             });
             pictureDialog.show();
-            }
-        }
-
-        private Bitmap changeStringImageToImageView(String encodedImage){
-            byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            return bitmap;
-        }
-
-        private void saveImageToFirestore(String encodedImage){
-            firestore.collection("users").document(currentUser.getEmail()).update("profileImage", encodedImage);
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == GALLERY) {
+                if (data != null && data.getData() != null) {
+                    tvImvAvatar.setImageURI(data.getData());
+
+                    // עדכון למסד הנתונים
+                    String encodedImage = encodeImageToBase64();
+                    saveImageToFirestore(encodedImage);
+                }
+            } else if (requestCode == CAMERA) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                if (photo != null) {
+                    tvImvAvatar.setImageBitmap(photo);
+
+                    // עדכון למסד הנתונים
+                    String encodedImage = encodeImageToBase64();
+                    saveImageToFirestore(encodedImage);
+                }
+            }
+        }
+    }
+
+    private Bitmap changeStringImageToImageView(String encodedImage) {
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        return bitmap;
+    }
+
+    private void saveImageToFirestore(String encodedImage) {
+        firestore.collection("users").document(currentUser.getEmail()).update("profileImage", encodedImage);
+    }
+
+    private String encodeImageToBase64() {
+        Bitmap bitmap = ((BitmapDrawable) tvImvAvatar.getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+    }
+}

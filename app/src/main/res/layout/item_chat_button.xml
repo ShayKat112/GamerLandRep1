@@ -5,4 +5,5 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     android:text="Chat Name"
+    android:backgroundTint="#2196F3"
     android:textSize="16sp" />

@@ -90,7 +90,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             age = Calendar.getInstance().get(Calendar.YEAR) - year;
             month++; // Months are 0-based in DatePicker
             tvBirthDate.setText(makeDateString(day, month, year));
-
         };
 
         Calendar cal = Calendar.getInstance();
@@ -113,10 +112,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             registerUser();
         } else if (view == btnChooseAvatar) {
             showPictureDialog();
-        } else if (view == btnChooseDate) { // Add this case
+        } else if (view == btnChooseDate) {
             datePickerDialog.show();
-        }
-        else if(view == imbtnBack){
+        } else if (view == imbtnBack) {
             Intent intent = new Intent(RegisterActivity.this, WelcomeActivity.class);
             startActivity(intent);
         }
@@ -141,8 +139,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
-
     private void registerUser() {
         String email = edEmail.getText().toString().trim();
         int counterDigits = 0;
@@ -153,6 +149,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String birthDate = tvBirthDate.getText().toString();
         String likedGamesStr = edLikedGames.getText().toString();
         List<String> likedGames = likedGamesStr.isEmpty() ? null : Arrays.asList(likedGamesStr.split(","));
+
         for (int i = 0; i < password.length(); i++) {
             if (Character.isDigit(password.charAt(i))) {
                 counterDigits++;
@@ -164,6 +161,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 isLetter = true;
             }
         }
+
         if (counterDigits < 2) {
             Toast.makeText(this, "Password must contain at least 2 digits", Toast.LENGTH_SHORT).show();
             return;
@@ -180,9 +178,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
-
-
-
         if (email.isEmpty() || password.isEmpty() || username.isEmpty() || birthDate.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
@@ -212,28 +207,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         Log.e("RegisterActivity", "Sign-up failed: " + task.getException().getMessage());
                     }
                 });
-
     }
 
-
     private void saveUserToFirestore(String email, String username, String birthDate, List<String> likedGames, String profileImage) {
-        // Create a UserModel object
         usermodel user = new usermodel(email, username, birthDate, likedGames, profileImage, false);
-        // Save user to Firestore
         firestore.collection("users").document(email)
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(RegisterActivity.this, "User saved to Firestore", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                     finish();
-                }) // Missing closing parenthesis and curly brace here
+                })
                 .addOnFailureListener(e -> {
                     Toast.makeText(RegisterActivity.this, "Error saving user: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
-
-
-
 
     private String encodeImageToBase64() {
         Bitmap bitmap = ((BitmapDrawable) imvAvatar.getDrawable()).getBitmap();
@@ -269,5 +257,4 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             startActivityForResult(intent, CAMERA);
         }
     }
-
 }

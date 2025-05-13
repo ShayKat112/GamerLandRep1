@@ -45,12 +45,10 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         searchView = view.findViewById(R.id.searchView);
-
         searchView.setIconifiedByDefault(false);
 
         resultContainer = view.findViewById(R.id.resultContainer);
         db = FirebaseFirestore.getInstance();
-
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -65,14 +63,15 @@ public class SearchFragment extends Fragment {
                 return true;
             }
         });
+
         return view;
     }
 
     private void searchChats(String queryText) {
         resultContainer.removeAllViews();
         CollectionReference chatsRef = db.collection("chats");
-        Query query = db.collection("chats")
-                .whereEqualTo("chatName", queryText);
+        Query query = chatsRef.whereGreaterThanOrEqualTo("chatName", queryText)
+                .whereLessThanOrEqualTo("chatName", queryText + "\uf8ff");
 
         query.get().addOnSuccessListener(queryDocumentSnapshots -> {
             if (queryDocumentSnapshots.isEmpty()) {
@@ -82,14 +81,15 @@ public class SearchFragment extends Fragment {
                     String chatName = documentSnapshot.getString("chatName");
                     String chatId = documentSnapshot.getId();
                     if (chatName != null) {
-                        createChatButton(chatId,chatName);
+                        createChatButton(chatId, chatName);
                     }
                 }
             }
-        }).addOnFailureListener(e -> Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(e ->
+                Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void createChatButton(String chatId,String chatName) {
+    private void createChatButton(String chatId, String chatName) {
         for (int i = 0; i < resultContainer.getChildCount(); i++) {
             View child = resultContainer.getChildAt(i);
             if (child instanceof Button) {
@@ -99,6 +99,7 @@ public class SearchFragment extends Fragment {
                 }
             }
         }
+
         Button chatButton = new Button(requireActivity());
         chatButton.setText(chatName);
         chatButton.setAllCaps(false);
@@ -113,13 +114,11 @@ public class SearchFragment extends Fragment {
             bundle.putString("chatId", chatId);
             chatFragment.setArguments(bundle);
             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.flFragment, chatFragment);
+            transaction.replace(R.id.nav_host_fragment, chatFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         });
 
-
-        // Add the button to your layout container.
         resultContainer.addView(chatButton);
     }
 }
