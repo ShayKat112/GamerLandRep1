@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.gamerland.Adapters.ChatListAdapter;
+import com.example.gamerland.models.chatmodel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -22,12 +23,12 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{
     private RecyclerView rv;
     private ChatListAdapter adapter;
     private List<chatmodel> chatList = new ArrayList<>();
     private FirebaseFirestore db;
-    private Button btnCreateChat;
+    private Button btnCreateChat, btnAdminLogin;
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -50,6 +51,12 @@ public class HomeFragment extends Fragment {
         rv = view.findViewById(R.id.rv_home_chats);
         rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
         btnCreateChat = view.findViewById(R.id.btnCreateChat);
+        btnAdminLogin = view.findViewById(R.id.btnAdminLogin);
+        // btnAdminLogin.setVisibility(View.GONE);
+        btnAdminLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminActivity.class);
+            startActivity(intent);
+        });
 
         adapter = new ChatListAdapter(chatList, chat -> {
             Bundle b = new Bundle();

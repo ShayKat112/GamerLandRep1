@@ -1,4 +1,4 @@
-package com.example.gamerland;
+package com.example.gamerland.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.gamerland.R;
+import com.example.gamerland.models.chatmodel;
 
 import java.util.List;
 

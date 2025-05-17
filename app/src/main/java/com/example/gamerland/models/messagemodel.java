@@ -1,6 +1,4 @@
-package com.example.gamerland;
-
-import android.widget.ImageView;
+package com.example.gamerland.models;
 
 public class messagemodel {
     private String text;

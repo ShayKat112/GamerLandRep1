@@ -1,4 +1,4 @@
-package com.example.gamerland;
+package com.example.gamerland.models;
 
 public class chatmodel {
     private String chatName;

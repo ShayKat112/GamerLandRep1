@@ -1,8 +1,7 @@
-package com.example.gamerland;
+package com.example.gamerland.Adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Message;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.gamerland.R;
+import com.example.gamerland.models.messagemodel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

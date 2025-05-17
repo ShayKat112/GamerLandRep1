@@ -1,7 +1,5 @@
 package com.example.gamerland;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,18 +8,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gamerland.Adapters.ChatAdapter;
+import com.example.gamerland.models.messagemodel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,6 +39,7 @@ public class ChatFragment extends Fragment {
     private FirebaseFirestore db;
     private TextView chatName;
     private TextView chatDescription;
+    private ImageButton imbtnReportChat;
     private String chatId;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = auth.getCurrentUser();
@@ -54,6 +53,7 @@ public class ChatFragment extends Fragment {
         sendButton = view.findViewById(R.id.sendButton);
         chatName = view.findViewById(R.id.tvChatName);
         chatDescription = view.findViewById(R.id.tvChatDescription);
+        imbtnReportChat = view.findViewById(R.id.imbtnReportChat);
         db = FirebaseFirestore.getInstance();
 
         // קבלת ה-Chat ID מהארגומנטים שהועברו ל-Fragment

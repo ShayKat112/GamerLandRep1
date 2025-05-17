@@ -9,10 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.auth.FirebaseUser;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,9 +43,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         } else if (v == btnLogin) {
                 String email = edEmail.getText().toString();
                 String password = edPassword.getText().toString();
-                Intent intent = new Intent(WelcomeActivity.this, HomeActivity.class);
-                startActivity(intent);
-
                 if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(WelcomeActivity.this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
                 return;

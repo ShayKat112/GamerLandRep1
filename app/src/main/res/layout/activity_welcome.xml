@@ -67,8 +67,8 @@
         android:id="@+id/tvAccountChecker"
         android:layout_width="259dp"
         android:layout_height="79dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="16dp"
         android:text="Still doesn't have an account? Click here to register:"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -97,5 +97,6 @@
         android:text="Login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edPassword" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

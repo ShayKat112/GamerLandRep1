@@ -1,4 +1,4 @@
-package com.example.gamerland;
+package com.example.gamerland.models;
 
 import java.util.List;
 
