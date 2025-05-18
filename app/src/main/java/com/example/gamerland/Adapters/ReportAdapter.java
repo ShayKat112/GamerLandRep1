@@ -61,8 +61,28 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             });
             holder.btnDismissItem.setOnClickListener(v -> {
                 int currentPosition = holder.getAdapterPosition();
-                reportList.remove(currentPosition);
-                notifyItemRemoved(currentPosition);
+
+                new AlertDialog.Builder(holder.itemView.getContext())
+                        .setTitle("Remove Report")
+                        .setMessage("Are you sure you want to delete this report?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            // 1. מחיקת המסמך מ־Firestore
+                            String reportId = report.getDocumentId();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            db.collection("reports")
+                                    .document(reportId)
+                                    .delete()
+                                    .addOnSuccessListener(unused -> {
+                                        // 2. מחיקה מהרשימה
+                                        reportList.remove(currentPosition);
+                                        notifyItemRemoved(currentPosition);
+                                        Toast.makeText(holder.itemView.getContext(), "Report deleted", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(holder.itemView.getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             });
         } else {
             holder.tvUsernameReported.setText("Unknown");

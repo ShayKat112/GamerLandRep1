@@ -140,16 +140,16 @@ public class ChatFragment extends Fragment {
                                 String messageId = doc.getId();
                                 message.setMessageId(messageId);
 
-                                String senderEmail = message.getSenderEmail(); // או username אם אתה שומר ככה
-
-                                db.collection("users").document(senderEmail).get()
-                                        .addOnSuccessListener(userDoc -> {
-                                            if (userDoc.exists()) {
-                                                // המשתמש קיים – תוסיף את ההודעה
-                                                messageList.add(message);
-                                                chatAdapter.notifyDataSetChanged();
-                                            }
-                                        });
+                                String senderEmail = message.getSenderEmail();
+                                if (senderEmail != null && !senderEmail.isEmpty()) {
+                                    db.collection("users").document(senderEmail).get()
+                                            .addOnSuccessListener(userDoc -> {
+                                                if (userDoc.exists()) {
+                                                    messageList.add(message);
+                                                    chatAdapter.notifyDataSetChanged();
+                                                }
+                                            });
+                                }
                             }
                         }
 

@@ -64,10 +64,11 @@ public class AdminChatsControlFragment extends Fragment {
                 .addOnSuccessListener(querySnapshot -> {
                     for (DocumentSnapshot doc : querySnapshot) {
                         ReportChatModel report = doc.toObject(ReportChatModel.class);
-                        Log.d("Firestore", "Report loaded: " + report);
                         if (report != null) {
+                            report.setDocumentId(doc.getId());
                             reports.add(report);
-                        } else {
+                        }
+                        else {
                             Log.w("Firestore", "Report is null");
                         }
                     }

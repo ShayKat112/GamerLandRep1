@@ -7,6 +7,7 @@ public class ReportChatModel {
     private String chatReported;
     private String chatId; // ← הוספנו שדה זה
     private String reportReason;
+    private String documentId;
 
     public ReportChatModel() {}
 
@@ -32,5 +33,13 @@ public class ReportChatModel {
 
     public void setReportReason(String reportReason) {
         this.reportReason = reportReason;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

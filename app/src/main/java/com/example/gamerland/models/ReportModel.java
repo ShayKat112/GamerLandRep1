@@ -7,6 +7,7 @@ public class ReportModel {
     private String usernameReported;
     private String emailReported;
     private String reportReason;
+    private String documentId;
 
     // חובה: בונה ריק עבור Firestore
     public ReportModel() {}
@@ -41,5 +42,13 @@ public class ReportModel {
 
     public void setEmailReported(String emailReported) {
         this.emailReported = emailReported;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

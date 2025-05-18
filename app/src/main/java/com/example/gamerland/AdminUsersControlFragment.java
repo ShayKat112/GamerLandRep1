@@ -61,8 +61,10 @@ public class AdminUsersControlFragment extends Fragment {
                     for (DocumentSnapshot doc : querySnapshot) {
                         ReportModel report = doc.toObject(ReportModel.class);
                         if (report != null) {
+                            report.setDocumentId(doc.getId());
                             reports.add(report);
                         }
+
                     }
                     adapter.notifyDataSetChanged();
                 });
