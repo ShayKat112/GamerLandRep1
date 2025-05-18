@@ -65,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="כתוב הודעה..."
+            android:hint="Send a message..."
             android:padding="8dp"
             android:background="@android:drawable/editbox_background"
             android:textSize="16sp" />
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#03A9F4"
-            android:text="שלח"
+            android:text="Send"
             android:padding="8dp" />
     </LinearLayout>
 

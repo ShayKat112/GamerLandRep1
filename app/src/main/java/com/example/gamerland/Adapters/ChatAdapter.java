@@ -118,21 +118,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
 
 
-
     private void sendReportToMessage(String chatId, String messageId, messagemodel message, String reason, Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> reportData = new HashMap<>();
         reportData.put("usernameReported", message.getSenderUsername());
         reportData.put("reportReason", reason);
+        reportData.put("emailReported", message.getSenderEmail());
         reportData.put("messageText", message.getText());
         reportData.put("timestamp", message.getTimestamp());
 
-        db.collection("chats")
-                .document(chatId)
-                .collection("messages")
-                .document(messageId)
-                .collection("reports")
+        db.collection("reports")
                 .add(reportData)
                 .addOnSuccessListener(documentReference ->
                         Toast.makeText(context, "Report submitted", Toast.LENGTH_SHORT).show())

@@ -1,7 +1,6 @@
 package com.example.gamerland.Adapters;
 
 import android.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,45 +13,45 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamerland.R;
-import com.example.gamerland.models.ReportModel;
+import com.example.gamerland.models.ReportChatModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportViewHolder> {
+public class ReportChatAdapter extends RecyclerView.Adapter<ReportChatAdapter.ReportViewHolder> {
 
-    private List<ReportModel> reportList;
+    private List<ReportChatModel> reportList;
 
-    public ReportAdapter(List<ReportModel> reportList) {
+    public ReportChatAdapter(List<ReportChatModel> reportList) {
         this.reportList = reportList;
     }
 
     @NonNull
     @Override
     public ReportViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_report, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_report_chats, parent, false);
         return new ReportViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ReportViewHolder holder, int position) {
-        ReportModel report = reportList.get(position);
+        ReportChatModel report = reportList.get(position);
         if (report != null) {
-            holder.tvUsernameReported.setText("Username Reported: " + report.getUsernameReported());
+            holder.tvChatReported.setText("Chat Reported: " + report.getChatReported());
             holder.tvReportReason.setText("Report Reason: " + report.getReportReason());
-            holder.btnDeleteUser.setOnClickListener(v -> {
-                String username = report.getUsernameReported();
-                String email = report.getEmailReported();
+            holder.btnDeleteChat.setOnClickListener(v -> {
+                String chatId = report.getChatId(); // ודא שהשדה קיים במודל!
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+
                 new AlertDialog.Builder(holder.itemView.getContext())
-                        .setTitle("Delete User")
-                        .setMessage("Are you sure you want to delete user: " + username + "?")
+                        .setTitle("Delete Chat")
+                        .setMessage("Are you sure you want to delete chat ID: " + chatId + "?")
                         .setPositiveButton("Yes", (dialog, which) -> {
-                            db.collection("users")
-                                    .document(email) // ← רק אם זה מזהה המסמך
+                            db.collection("chats")
+                                    .document(chatId)
                                     .delete()
                                     .addOnSuccessListener(unused ->
-                                            Toast.makeText(holder.itemView.getContext(), "User deleted", Toast.LENGTH_SHORT).show())
+                                            Toast.makeText(holder.itemView.getContext(), "Chat deleted", Toast.LENGTH_SHORT).show())
                                     .addOnFailureListener(e ->
                                             Toast.makeText(holder.itemView.getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                         })
@@ -64,8 +63,9 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                 reportList.remove(currentPosition);
                 notifyItemRemoved(currentPosition);
             });
+
         } else {
-            holder.tvUsernameReported.setText("Unknown");
+            holder.tvChatReported.setText("Unknown");
             holder.tvReportReason.setText("Unknown");
         }
     }
@@ -77,17 +77,18 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
     }
 
     public static class ReportViewHolder extends RecyclerView.ViewHolder {
-        TextView tvUsernameReported, tvReportReason;
-        Button btnDeleteUser;
+        TextView tvChatReported, tvReportReason;
+        Button btnDeleteChat;
         ImageButton btnDismissItem;
+
+
 
         public ReportViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvUsernameReported = itemView.findViewById(R.id.tvUsernameReported);
+            tvChatReported = itemView.findViewById(R.id.tvChatReported);
             tvReportReason = itemView.findViewById(R.id.tvReportReason);
-            btnDeleteUser = itemView.findViewById(R.id.btnDeleteUser);
+            btnDeleteChat = itemView.findViewById(R.id.btnDeleteChat);
             btnDismissItem = itemView.findViewById(R.id.btnDismissItem);
         }
     }
 }
-    

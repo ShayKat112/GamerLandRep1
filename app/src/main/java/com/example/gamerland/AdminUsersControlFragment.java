@@ -4,8 +4,10 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ public class AdminUsersControlFragment extends Fragment {
 
     TextView tvUsersControl;
     RecyclerView rv;
+    FirebaseFirestore db;
 
     public AdminUsersControlFragment() {
         // Required empty public constructor
@@ -46,23 +49,24 @@ public class AdminUsersControlFragment extends Fragment {
         tvUsersControl = view.findViewById(R.id.tvUsersControl);
         rv = view.findViewById(R.id.rv_admin_users);
         tvUsersControl.setText("Users Control");
-        rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         List<ReportModel> reports = new ArrayList<>();
         ReportAdapter adapter = new ReportAdapter(reports);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
 
-// קריאה ל-Firestore
-        String collectionPath = "chats/chatId/messages/messageId/reports"; // או "chat_reports"
-        db.collection(collectionPath)
+        db.collection("reports")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     for (DocumentSnapshot doc : querySnapshot) {
                         ReportModel report = doc.toObject(ReportModel.class);
-                        reports.add(report);
+                        if (report != null) {
+                            reports.add(report);
+                        }
                     }
                     adapter.notifyDataSetChanged();
                 });
+        Log.d("AdminUsersControlFragment", "onCreateView: adapter notified");
         return view;
     }
 }

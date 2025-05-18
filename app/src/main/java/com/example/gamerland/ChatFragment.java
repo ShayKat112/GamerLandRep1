@@ -106,8 +106,10 @@ public class ChatFragment extends Fragment {
         builder.show();
     }
 
+
     private void sendChatReportToFirestore(String reason) {
         Map<String, Object> reportData = new HashMap<>();
+        reportData.put("chatReported", chatName.getText().toString());
         reportData.put("chatId", chatId);
         reportData.put("reportReason", reason);
         reportData.put("timestamp", System.currentTimeMillis());
@@ -136,9 +138,18 @@ public class ChatFragment extends Fragment {
                             messagemodel message = doc.toObject(messagemodel.class);
                             if (message != null) {
                                 String messageId = doc.getId();
-                                // אפשר לשמור map של messageId לכל הודעה או להוסיף את זה למודל
                                 message.setMessageId(messageId);
-                                messageList.add(message);
+
+                                String senderEmail = message.getSenderEmail(); // או username אם אתה שומר ככה
+
+                                db.collection("users").document(senderEmail).get()
+                                        .addOnSuccessListener(userDoc -> {
+                                            if (userDoc.exists()) {
+                                                // המשתמש קיים – תוסיף את ההודעה
+                                                messageList.add(message);
+                                                chatAdapter.notifyDataSetChanged();
+                                            }
+                                        });
                             }
                         }
 
@@ -154,10 +165,11 @@ public class ChatFragment extends Fragment {
         db.collection("users").document(email).get().addOnSuccessListener(documentSnapshot -> {
             String senderUsername = documentSnapshot.getString("username");
             String profileImage = documentSnapshot.getString("profileImage");
+            String senderEmail = documentSnapshot.getString("email");
             if (text.isEmpty()) return;
             long now = System.currentTimeMillis();
             Log.d("ChatFragment", "Sending message: " + senderUsername);
-            messagemodel message = new messagemodel(text, senderUsername, profileImage, now);
+            messagemodel message = new messagemodel(text, senderUsername,senderEmail, profileImage, now);
             // 1. שולחים את ההודעה
             db.collection("chats")
                     .document(chatId)

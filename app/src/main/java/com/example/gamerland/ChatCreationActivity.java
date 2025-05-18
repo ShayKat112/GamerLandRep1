@@ -33,6 +33,7 @@ public class ChatCreationActivity extends AppCompatActivity {
     }
 
     private void createChat() {
+        db.collection("chats").document(edChatName.getText().toString().trim()).get().addOnSuccessListener(documentSnapshot -> {
         chatmodel chat = new chatmodel();
         chat.setChatName(edChatName.getText().toString().trim());
         chat.setChatDescription(edChatDescription.getText().toString().trim());
@@ -41,7 +42,15 @@ public class ChatCreationActivity extends AppCompatActivity {
 
         if (chat.getChatName().isEmpty() || chat.getChatDescription().isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-        } else {
+        }
+        else if (documentSnapshot.exists()) {
+            Toast.makeText(this, "Chat already exists", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("openChatId", edChatName.getText().toString().trim()); // נשלח את chatId
+            startActivity(intent);
+            finish();
+        }
+        else {
             db.collection("chats").document(edChatName.getText().toString().trim()).set(chat)
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(this, "Chat created successfully", Toast.LENGTH_SHORT).show();
@@ -52,5 +61,6 @@ public class ChatCreationActivity extends AppCompatActivity {
                         Toast.makeText(this, "Error creating chat: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
         }
+        });
     }
 }

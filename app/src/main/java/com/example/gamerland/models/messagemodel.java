@@ -5,13 +5,15 @@ public class messagemodel {
     private String senderUsername;
     private String tvImvAvatar;
     private String messageId;
+    private String senderEmail;
     private long timestamp;
 
     public messagemodel() {} // נדרש על ידי Firestore
 
-    public messagemodel(String text, String senderUsername, String tvImvAvatar, long timestamp) {
+    public messagemodel(String text, String senderUsername,String senderEmail, String tvImvAvatar, long timestamp) {
         this.text = text;
         this.senderUsername = senderUsername;
+        this.senderEmail = senderEmail;
         this.tvImvAvatar = tvImvAvatar;
         this.timestamp = timestamp;
     }
@@ -46,5 +48,13 @@ public class messagemodel {
 
     public void setMessageId(String messageId) {
         this.messageId = messageId;
+    }
+
+    public String getSenderEmail() {
+        return senderEmail;
+    }
+
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
     }
 }
