@@ -57,6 +57,7 @@ public class ChatFragment extends Fragment {
         chatName = view.findViewById(R.id.tvChatName);
         chatDescription = view.findViewById(R.id.tvChatDescription);
         imbtnReportChat = view.findViewById(R.id.imbtnReportChat);
+        imbtnReportChat.setOnClickListener(v -> showChatReportDialog());
         db = FirebaseFirestore.getInstance();
 
 
@@ -83,6 +84,42 @@ public class ChatFragment extends Fragment {
         });
         return view;
     }
+
+    private void showChatReportDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Report Chat");
+
+        final EditText input = new EditText(requireContext());
+        input.setHint("Enter report reason");
+        builder.setView(input);
+
+        builder.setPositiveButton("Submit", (dialog, which) -> {
+            String reason = input.getText().toString().trim();
+            if (!reason.isEmpty()) {
+                sendChatReportToFirestore(reason);
+            } else {
+                Toast.makeText(getContext(), "Please enter a reason", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    private void sendChatReportToFirestore(String reason) {
+        Map<String, Object> reportData = new HashMap<>();
+        reportData.put("chatId", chatId);
+        reportData.put("reportReason", reason);
+        reportData.put("timestamp", System.currentTimeMillis());
+
+        db.collection("chat_reports")
+                .add(reportData)
+                .addOnSuccessListener(doc ->
+                        Toast.makeText(getContext(), "Chat report submitted", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Failed to submit chat report", Toast.LENGTH_SHORT).show());
+    }
+
 
 
     private void loadMessages() {
