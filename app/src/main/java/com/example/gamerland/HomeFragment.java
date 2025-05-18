@@ -16,6 +16,8 @@ import android.widget.Button;
 
 import com.example.gamerland.Adapters.ChatListAdapter;
 import com.example.gamerland.models.chatmodel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -29,6 +31,8 @@ public class HomeFragment extends Fragment{
     private List<chatmodel> chatList = new ArrayList<>();
     private FirebaseFirestore db;
     private Button btnCreateChat, btnAdminLogin;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser currentUser = auth.getCurrentUser();
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -52,10 +56,21 @@ public class HomeFragment extends Fragment{
         rv.setLayoutManager(new GridLayoutManager(getContext(), 3));
         btnCreateChat = view.findViewById(R.id.btnCreateChat);
         btnAdminLogin = view.findViewById(R.id.btnAdminLogin);
-        // btnAdminLogin.setVisibility(View.GONE);
+        btnAdminLogin.setVisibility(View.GONE);
+        String email = currentUser.getEmail();
+
+        db.collection("users").document(email).get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        boolean isAdmin = documentSnapshot.getBoolean("admin");
+                        Log.d("HomeFragment", "isAdmin: " + isAdmin);
+                        if (isAdmin) {
+                            btnAdminLogin.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
         btnAdminLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AdminActivity.class);
-            startActivity(intent);
+                        Intent intent = new Intent(getActivity(), AdminActivity.class);
+                        startActivity(intent);
         });
 
         adapter = new ChatListAdapter(chatList, chat -> {

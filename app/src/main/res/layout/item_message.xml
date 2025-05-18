@@ -1,52 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@null">
 
+    <!-- תמונת פרופיל -->
     <ImageView
         android:id="@+id/tvImvAvatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/avatar1" />
+        android:src="@drawable/avatar1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- שם המשתמש -->
+
+    <!-- כפתור דיווח -->
 
     <TextView
         android:id="@+id/tvSenderName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Sender Name"
-        android:layout_marginTop="-35dp"
-        android:layout_marginLeft="55dp"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:textColor="@android:color/black" />
+        app:layout_constraintEnd_toStartOf="@id/imbtnReportUser"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/tvImvAvatar"
+        app:layout_constraintTop_toTopOf="@id/tvImvAvatar" />
 
     <ImageButton
         android:id="@+id/imbtnReportUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
-        android:layout_marginLeft="160dp"
-        android:layout_marginTop="-25dp"
-        tools:srcCompat="@drawable/report_user" />
+        android:contentDescription="Report User"
+        android:src="@drawable/report_user"
+        app:layout_constraintTop_toTopOf="@id/tvSenderName"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- טקסט ההודעה -->
     <TextView
         android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="40dp"
         android:text="Message text"
         android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvImvAvatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- טיימסטאמפ -->
     <TextView
         android:id="@+id/timestampTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:text="12:30"
         android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"/>
-</LinearLayout>
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/messageTextView"
+        app:layout_constraintStart_toStartOf="@id/messageTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

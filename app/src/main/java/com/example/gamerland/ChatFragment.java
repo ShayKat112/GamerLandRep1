@@ -1,5 +1,6 @@
 package com.example.gamerland;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatFragment extends Fragment {
 
@@ -56,6 +59,7 @@ public class ChatFragment extends Fragment {
         imbtnReportChat = view.findViewById(R.id.imbtnReportChat);
         db = FirebaseFirestore.getInstance();
 
+
         // קבלת ה-Chat ID מהארגומנטים שהועברו ל-Fragment
         if (getArguments() != null) {
             chatId = getArguments().getString("chatId");
@@ -64,7 +68,10 @@ public class ChatFragment extends Fragment {
             return view;
         }
         messageList = new ArrayList<>();
-        chatAdapter = new ChatAdapter(messageList);
+        if (getArguments() != null) {
+            chatId = getArguments().getString("chatId");
+            chatAdapter = new ChatAdapter(messageList, chatId);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(chatAdapter);
         loadMessages();
@@ -76,6 +83,7 @@ public class ChatFragment extends Fragment {
         });
         return view;
     }
+
 
     private void loadMessages() {
         db.collection("chats").document(chatId).collection("messages")
@@ -90,9 +98,13 @@ public class ChatFragment extends Fragment {
                         for (DocumentSnapshot doc : value.getDocuments()) {
                             messagemodel message = doc.toObject(messagemodel.class);
                             if (message != null) {
+                                String messageId = doc.getId();
+                                // אפשר לשמור map של messageId לכל הודעה או להוסיף את זה למודל
+                                message.setMessageId(messageId);
                                 messageList.add(message);
                             }
                         }
+
                         chatAdapter.notifyDataSetChanged();
                         recyclerView.scrollToPosition(messageList.size() - 1);
                     }

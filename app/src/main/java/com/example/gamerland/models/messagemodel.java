@@ -4,6 +4,7 @@ public class messagemodel {
     private String text;
     private String senderUsername;
     private String tvImvAvatar;
+    private String messageId;
     private long timestamp;
 
     public messagemodel() {} // נדרש על ידי Firestore
@@ -37,5 +38,13 @@ public class messagemodel {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 }
