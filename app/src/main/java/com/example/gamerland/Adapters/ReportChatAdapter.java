@@ -60,11 +60,6 @@ public class ReportChatAdapter extends RecyclerView.Adapter<ReportChatAdapter.Re
             });
             holder.btnDismissItem.setOnClickListener(v -> {
                 int currentPosition = holder.getAdapterPosition();
-
-                new AlertDialog.Builder(holder.itemView.getContext())
-                        .setTitle("Remove Report")
-                        .setMessage("Are you sure you want to delete this report?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
                             // 1. מחיקת המסמך מ־Firestore
                             String reportId = report.getDocumentId();
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -79,12 +74,7 @@ public class ReportChatAdapter extends RecyclerView.Adapter<ReportChatAdapter.Re
                                     })
                                     .addOnFailureListener(e ->
                                             Toast.makeText(holder.itemView.getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
-            });
-
-
+                        });
         } else {
             holder.tvChatReported.setText("Unknown");
             holder.tvReportReason.setText("Unknown");

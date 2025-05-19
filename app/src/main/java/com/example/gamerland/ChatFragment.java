@@ -75,6 +75,7 @@ public class ChatFragment extends Fragment {
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(chatAdapter);
+        recyclerView.post(() -> recyclerView.scrollToPosition(messageList.size() - 1));
         loadMessages();
         sendButton.setOnClickListener(v -> sendMessage());
         db.collection("chats").document(chatId).get().addOnSuccessListener(documentSnapshot -> {
@@ -134,7 +135,9 @@ public class ChatFragment extends Fragment {
                     }
                     if (value != null) {
                         messageList.clear();
-                        for (DocumentSnapshot doc : value.getDocuments()) {
+                        List<DocumentSnapshot> docs = value.getDocuments();
+                        for (int i = 0; i < docs.size(); i++) {
+                            DocumentSnapshot doc = docs.get(i);
                             messagemodel message = doc.toObject(messagemodel.class);
                             if (message != null) {
                                 String messageId = doc.getId();
@@ -142,19 +145,18 @@ public class ChatFragment extends Fragment {
 
                                 String senderEmail = message.getSenderEmail();
                                 if (senderEmail != null && !senderEmail.isEmpty()) {
+                                    int finalI = i; // חובה כדי לעבוד בתוך listener
                                     db.collection("users").document(senderEmail).get()
                                             .addOnSuccessListener(userDoc -> {
-                                                if (userDoc.exists()) {
-                                                    messageList.add(message);
+                                                messageList.add(message);
+                                                if (finalI == docs.size() - 1) {
                                                     chatAdapter.notifyDataSetChanged();
+                                                    recyclerView.scrollToPosition(messageList.size() - 1);
                                                 }
                                             });
                                 }
                             }
                         }
-
-                        chatAdapter.notifyDataSetChanged();
-                        recyclerView.scrollToPosition(messageList.size() - 1);
                     }
                 });
     }

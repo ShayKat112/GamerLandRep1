@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamerland.R;
 import com.example.gamerland.models.ReportModel;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -52,7 +53,26 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                                     .document(email) // ← רק אם זה מזהה המסמך
                                     .delete()
                                     .addOnSuccessListener(unused ->
-                                            Toast.makeText(holder.itemView.getContext(), "User deleted", Toast.LENGTH_SHORT).show())
+                                            Toast.makeText(holder.itemView.getContext(), "User deleted", Toast.LENGTH_SHORT).show());
+                            db.collection("chats")
+                                    .get()
+                                    .addOnSuccessListener(chatSnapshots -> {
+                                        for (DocumentSnapshot chatDoc : chatSnapshots) {
+                                            String chatId = chatDoc.getId();
+
+                                            // שלב 2: עבור כל הודעה בצ'אט הזה
+                                            db.collection("chats")
+                                                    .document(chatId)
+                                                    .collection("messages")
+                                                    .whereEqualTo("senderEmail", email) // או senderUsername אם אתה משתמש בזה
+                                                    .get()
+                                                    .addOnSuccessListener(messageSnapshots -> {
+                                                        for (DocumentSnapshot msgDoc : messageSnapshots) {
+                                                            msgDoc.getReference().delete(); // מחיקה בפועל
+                                                        }
+                                                    });
+                                        }
+                                    })
                                     .addOnFailureListener(e ->
                                             Toast.makeText(holder.itemView.getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                         })
@@ -61,11 +81,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
             });
             holder.btnDismissItem.setOnClickListener(v -> {
                 int currentPosition = holder.getAdapterPosition();
-
-                new AlertDialog.Builder(holder.itemView.getContext())
-                        .setTitle("Remove Report")
-                        .setMessage("Are you sure you want to delete this report?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
                             // 1. מחיקת המסמך מ־Firestore
                             String reportId = report.getDocumentId();
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -80,10 +95,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
                                     })
                                     .addOnFailureListener(e ->
                                             Toast.makeText(holder.itemView.getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
-            });
+                        });
         } else {
             holder.tvUsernameReported.setText("Unknown");
             holder.tvReportReason.setText("Unknown");
