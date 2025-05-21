@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.gamerland.Adapters.ChatListAdapter;
 import com.example.gamerland.models.chatmodel;
@@ -33,6 +35,8 @@ public class HomeFragment extends Fragment{
     private Button btnCreateChat, btnAdminLogin;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = auth.getCurrentUser();
+    private boolean isPlaying = false;
+    private ImageButton btnMusicControl;
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -57,7 +61,25 @@ public class HomeFragment extends Fragment{
         btnCreateChat = view.findViewById(R.id.btnCreateChat);
         btnAdminLogin = view.findViewById(R.id.btnAdminLogin);
         btnAdminLogin.setVisibility(View.GONE);
+        btnMusicControl = view.findViewById(R.id.btnMusicControl);
         String email = currentUser.getEmail();
+
+        btnMusicControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent musicIntent = new Intent(getActivity(), MusicService.class);
+
+                if (isPlaying) {
+                    getActivity().stopService(musicIntent);
+                    btnMusicControl.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_stop_music));
+                } else {
+                    getActivity().startService(musicIntent);
+                    btnMusicControl.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_play_music));
+                }
+
+                isPlaying = !isPlaying;
+            }
+        });
 
         db.collection("users").document(email).get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
